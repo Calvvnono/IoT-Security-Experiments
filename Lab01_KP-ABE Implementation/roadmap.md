@@ -163,53 +163,68 @@
 
 在编译和运行 `kp_abe.cpp` 代码之前，您需要确保您的系统（通常是 Linux 环境，如 Ubuntu、Debian、Fedora、CentOS 等）已安装以下必要的库和工具：
 
-1.  **C++ 编译器 (g++)**: 大多数 Linux 发行版会自带或可以通过包管理器轻松安装。
-    *   **Debian/Ubuntu**:
-        ```bash
-        sudo apt update
-        sudo apt install build-essential
-        ```
-        (`build-essential` 通常包含 g++, make 等开发工具)
-    
-2.  **GMP (GNU Multiple Precision Arithmetic Library)**: PBC 库依赖于 GMP 进行大数运算。需要安装开发包（包含头文件和库）。
-    
-    *   **Debian/Ubuntu**:
-        ```bash
-        sudo apt install libgmp-dev
-        ```
-    
-3.  **OpenSSL 开发库**: 代码中使用了 OpenSSL 的随机数生成 (`RAND_bytes` 可能被 PBC 内部调用，或者为了更好的随机性保证而包含，链接时需要 `-lcrypto`)。
-    *   **Debian/Ubuntu**:
-        ```bash
-        sudo apt install libssl-dev
-        ```
-    
-4.  **PBC (Pairing-Based Cryptography) Library**: 这是核心库。通常需要从源码编译安装，因为它可能不在标准的发行版仓库中，或者版本较旧。
-    *   **获取源码**: 访问 PBC 官方网站: [https://crypto.stanford.edu/pbc/](https://crypto.stanford.edu/pbc/) 下载最新的源码包（通常是 `.tar.gz` 文件）。
-    *   **解压**:
-        ```bash
-        tar -zxvf pbc-0.5.14.tar.gz
-        cd pbc-0.5.14/
-        ```
-    *   **配置、编译和安装**:
-        
-        ```bash
-        ./configure # sudo apt install flex/bison
-        make
-        sudo make install
-        ```
-        *   `configure` 脚本会自动检测 GMP 是否安装。如果遇到问题，请检查 `./configure --help` 或 PBC 的文档。
-        *   `sudo make install` 通常会将库文件安装到 `/usr/local/lib`，头文件安装到 `/usr/local/include`。
-    *   **更新库缓存 (重要)**: 安装后，需要让系统知道新安装的库的位置。
-        ```bash
-        sudo ldconfig
-        ```
-        在某些系统上，如果库安装在非标准路径，您可能还需要将库路径添加到 `LD_LIBRARY_PATH` 环境变量中，但这通常在正确执行 `sudo make install` 和 `sudo ldconfig` 后不是必需的。
-    
-5.  **保存代码和 Makefile**:
-    *   将上面提供的 C++ 代码保存为 `kp_abe.cpp` 文件。
-    *   将下面提供的 Makefile 内容保存为 `Makefile` 文件。
-    *   确保这两个文件位于同一个目录下。
+1. **C++ 编译器 (g++)**: 大多数 Linux 发行版会自带或可以通过包管理器轻松安装。
+
+   * **Debian/Ubuntu**:
+
+     ```bash
+     sudo apt update
+     sudo apt install build-essential
+     ```
+
+     (`build-essential` 通常包含 g++, make 等开发工具)
+
+2. **GMP (GNU Multiple Precision Arithmetic Library)**: PBC 库依赖于 GMP 进行大数运算。需要安装开发包（包含头文件和库）。
+
+   * **Debian/Ubuntu**:
+
+     ```bash
+     sudo apt install libgmp-dev
+     ```
+
+3. **OpenSSL 开发库**: 代码中使用了 OpenSSL 的随机数生成 (`RAND_bytes` 可能被 PBC 内部调用，或者为了更好的随机性保证而包含，链接时需要 `-lcrypto`)。
+
+   * **Debian/Ubuntu**:
+
+     ```bash
+     sudo apt install libssl-dev
+     ```
+
+4. **PBC (Pairing-Based Cryptography) Library**: 这是核心库。通常需要从源码编译安装，因为它可能不在标准的发行版仓库中，或者版本较旧。
+
+   * **获取源码**: 访问 PBC 官方网站: [https://crypto.stanford.edu/pbc/](https://crypto.stanford.edu/pbc/) 下载最新的源码包（通常是 `.tar.gz` 文件）。
+
+   * **解压**:
+
+     ```bash
+     tar -zxvf pbc-0.5.14.tar.gz
+     cd pbc-0.5.14/
+     ```
+
+   * **配置、编译和安装**:
+
+     ```bash
+     ./configure # sudo apt install flex/bison
+     make
+     sudo make install
+     ```
+
+     *   `configure` 脚本会自动检测 GMP 是否安装。如果遇到问题，请检查 `./configure --help` 或 PBC 的文档。
+     *   `sudo make install` 通常会将库文件安装到 `/usr/local/lib`，头文件安装到 `/usr/local/include`。
+
+   * **更新库缓存 (重要)**: 安装后，需要让系统知道新安装的库的位置。
+
+     ```bash
+     sudo ldconfig
+     ```
+
+     在某些系统上，如果库安装在非标准路径，您可能还需要将库路径添加到 `LD_LIBRARY_PATH` 环境变量中，但这通常在正确执行 `sudo make install` 和 `sudo ldconfig` 后不是必需的。
+
+5. **保存代码和 Makefile**:
+
+   *   将上面提供的 C++ 代码保存为 `kp_abe.cpp` 文件。
+   *   将下面提供的 Makefile 内容保存为 `Makefile` 文件。
+   *   确保这两个文件位于同一个目录下。
 
 完成以上所有步骤后，您就可以在包含 `kp_abe.cpp` 和 `Makefile` 的目录下打开终端，执行 `make` 命令来编译代码了。
 
@@ -248,17 +263,23 @@ clean:
 
 **如何使用 Makefile**:
 
-1.  将上述内容保存为名为 `Makefile` 的文件（注意大小写）在 `kp_abe.cpp` 所在的目录。
-2.  在终端中，导航到该目录。
-3.  运行 `make` 命令来编译代码：
-    ```bash
-    make
-    ```
-    如果编译成功，会生成一个名为 `kp_abe` 的可执行文件。
-4.  运行 `make clean` 命令来删除生成的可执行文件：
-    ```bash
-    make clean
-    ```
+1. 将上述内容保存为名为 `Makefile` 的文件（注意大小写）在 `kp_abe.cpp` 所在的目录。
+
+2. 在终端中，导航到该目录。
+
+3. 运行 `make` 命令来编译代码：
+
+   ```bash
+   make
+   ```
+
+   如果编译成功，会生成一个名为 `kp_abe` 的可执行文件。
+
+4. 运行 `make clean` 命令来删除生成的可执行文件：
+
+   ```bash
+   make clean
+   ```
 
 **三、 代码运行的预期结果**
 
@@ -298,10 +319,10 @@ Pairing cleared. Exiting.
 7.  `Running Decryption... Decryption Successful.`: 使用生成的私钥 SK 解密密文 CT。
 8.  `SUCCESS: Decrypted message matches original message!`: 验证解密得到的消息与原始消息 M 相同，证明首次加密解密成功。
 9.  `--- Testing Decryption Failure Case ---`: 开始测试一个预期会失败的场景。
-10. `Running Encryption for attributes: { EE STUDENT } ... Encryption Complete.`: 使用属性集 {"STUDENT", "EE"} 加密原始消息。这个属性集 *不满足* 密钥策略（它既不满足 "STUDENT" AND "CS"，也不满足 "STAFF" AND "EE"）。
-11. `Running Decryption...`: 尝试使用私钥 SK 解密这个新的密文 CT_fail。
-12. `Decryption Failed: Ciphertext attributes do not satisfy the key's access policy.`: 解密函数内部首先检查了属性集是否满足访问树策略，发现不满足，因此报告失败（这是预期的）。
-13. `SUCCESS (expected failure): Decryption correctly failed...`: `main` 函数确认解密函数返回了 `false`（失败），这符合预期，因为属性集不匹配。
-14. `Pairing cleared. Exiting.`: 程序结束前清理 PBC 库资源。
+10.  `Running Encryption for attributes: { EE STUDENT } ... Encryption Complete.`: 使用属性集 {"STUDENT", "EE"} 加密原始消息。这个属性集 *不满足* 密钥策略（它既不满足 "STUDENT" AND "CS"，也不满足 "STAFF" AND "EE"）。
+11.  `Running Decryption...`: 尝试使用私钥 SK 解密这个新的密文 CT_fail。
+12.  `Decryption Failed: Ciphertext attributes do not satisfy the key's access policy.`: 解密函数内部首先检查了属性集是否满足访问树策略，发现不满足，因此报告失败（这是预期的）。
+13.  `SUCCESS (expected failure): Decryption correctly failed...`: `main` 函数确认解密函数返回了 `false`（失败），这符合预期，因为属性集不匹配。
+14.  `Pairing cleared. Exiting.`: 程序结束前清理 PBC 库资源。
 
 请注意，由于随机数的选择（在 Setup、KeyGen、Encrypt 中），每次运行的具体元素值会不同，但程序逻辑和最终的成功/失败结果应该是相同的。
