@@ -170,42 +170,31 @@
         sudo apt install build-essential
         ```
         (`build-essential` 通常包含 g++, make 等开发工具)
-    *   **Fedora/CentOS/RHEL**:
-        ```bash
-        sudo dnf update # 或者 sudo yum update
-        sudo dnf install gcc-c++ # 或者 sudo yum install gcc-c++
-        ```
-
+    
 2.  **GMP (GNU Multiple Precision Arithmetic Library)**: PBC 库依赖于 GMP 进行大数运算。需要安装开发包（包含头文件和库）。
+    
     *   **Debian/Ubuntu**:
         ```bash
         sudo apt install libgmp-dev
         ```
-    *   **Fedora/CentOS/RHEL**:
-        ```bash
-        sudo dnf install gmp-devel # 或者 sudo yum install gmp-devel
-        ```
-
+    
 3.  **OpenSSL 开发库**: 代码中使用了 OpenSSL 的随机数生成 (`RAND_bytes` 可能被 PBC 内部调用，或者为了更好的随机性保证而包含，链接时需要 `-lcrypto`)。
     *   **Debian/Ubuntu**:
         ```bash
         sudo apt install libssl-dev
         ```
-    *   **Fedora/CentOS/RHEL**:
-        ```bash
-        sudo dnf install openssl-devel # 或者 sudo yum install openssl-devel
-        ```
-
+    
 4.  **PBC (Pairing-Based Cryptography) Library**: 这是核心库。通常需要从源码编译安装，因为它可能不在标准的发行版仓库中，或者版本较旧。
     *   **获取源码**: 访问 PBC 官方网站: [https://crypto.stanford.edu/pbc/](https://crypto.stanford.edu/pbc/) 下载最新的源码包（通常是 `.tar.gz` 文件）。
     *   **解压**:
         ```bash
-        tar -zxvf pbc-*.tar.gz
-        cd pbc-*/
+        tar -zxvf pbc-0.5.14.tar.gz
+        cd pbc-0.5.14/
         ```
     *   **配置、编译和安装**:
+        
         ```bash
-        ./configure
+        ./configure # sudo apt install flex/bison
         make
         sudo make install
         ```
@@ -216,7 +205,7 @@
         sudo ldconfig
         ```
         在某些系统上，如果库安装在非标准路径，您可能还需要将库路径添加到 `LD_LIBRARY_PATH` 环境变量中，但这通常在正确执行 `sudo make install` 和 `sudo ldconfig` 后不是必需的。
-
+    
 5.  **保存代码和 Makefile**:
     *   将上面提供的 C++ 代码保存为 `kp_abe.cpp` 文件。
     *   将下面提供的 Makefile 内容保存为 `Makefile` 文件。
@@ -229,14 +218,17 @@
 ```makefile
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g # -g adds debug info, Wall/Wextra enable warnings
+# Correct include path pointing to the 'pbc' subdirectory
+CXXFLAGS = -std=c++17 -Wall -Wextra -g -I/usr/local/include/pbc
 
 # Linker flags and libraries
-LDFLAGS =
+# Library path is still correct
+LDFLAGS = -L/usr/local/lib
 LIBS = -lgmp -lpbc -lcrypto # Link against GMP, PBC, and OpenSSL crypto
 
-# Source file and executable name
-SRC = KP_ABE.cpp
+# Source file and executable name - Double check your actual filename case
+# Assuming kp_abe.cpp based on previous attempt, adjust if it's KP_ABE.cpp
+SRC = kp_abe.cpp
 EXEC = kp_abe
 
 # Default target
