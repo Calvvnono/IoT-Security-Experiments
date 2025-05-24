@@ -777,7 +777,6 @@ int main() {
         return 1;
     }
 
-    // Final Cleanup
     if (pairing_initialized) {
         if(g->field) element_clear(g);
         pairing_clear(pairing);
